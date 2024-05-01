@@ -1,0 +1,25 @@
+{
+  "name": "real_time_todo_app",
+  "version": "1.0.0",
+  "description": "its a real time todo application using sockect.io",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DhareppaHalli310807"
+  },
+  "author": "Dhareppa",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.3",
+    "socket.io": "^4.7.5"
+  }
+}

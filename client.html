@@ -1,0 +1,77 @@
+<!-- no need to change the prewritten code.
+complete the script tag code. -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task Management App</title>
+</head>
+
+<body>
+    <div id="task-form">
+        <!-- Create a form to add new tasks -->
+        <form id="create-task-form">
+            <input type="text" id="task-text" placeholder="Enter a new task" required>
+            <button id="create-task" type="submit">Add Task</button>
+        </form>
+    </div>
+
+    <div id="task-list">
+        <!-- Tasks will be displayed here -->
+    </div>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:3000');
+
+        const taskList = document.getElementById('task-list');
+
+        // Event listener for adding a new task
+        document.getElementById('create-task-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const taskText = document.getElementById('task-text').value.trim();
+            if (taskText !== '') {
+                socket.emit('addTask', taskText);
+                document.getElementById('task-text').value = '';
+            }
+        });
+
+        // Event listener for receiving new tasks
+        socket.on('taskAdded', (task) => {
+            addTaskToDOM(task);
+        });
+
+        // Event listener for receiving initial tasks
+        socket.on('initialTasks', (tasks) => {
+            tasks.forEach(task => {
+                addTaskToDOM(task);
+            });
+        });
+
+        // Function to add a task to the DOM
+        function addTaskToDOM(task) {
+            const taskElement = document.createElement('div');
+            taskElement.innerHTML = `
+                <div id="${task._id}">
+                    <span>${task.text}</span>
+                    <button onclick="deleteTask('${task._id}')">Delete</button>
+                </div>
+            `;
+            taskList.appendChild(taskElement);
+        }
+
+        // Function to delete a task
+        function deleteTask(taskId) {
+            socket.emit('deleteTask', taskId);
+            document.getElementById(taskId).remove();
+        }
+
+        // Event listener for receiving deleted tasks
+        socket.on('taskDeleted', (taskId) => {
+            document.getElementById(taskId).remove();
+        });
+    </script>
+</body>
+
+</html>
